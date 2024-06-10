@@ -44,8 +44,8 @@ make_cmd = "gmake" if is_macos else "make"
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 DEFAULT_ASM_PRELUDE_FILE = os.path.join(dir_path, "prelude.inc")
-
-DEFAULT_AS_CMDLINE: List[str] = ["mips-linux-gnu-as", "-march=vr4300", "-mabi=32"]
+from pathlib import Path
+DEFAULT_AS_CMDLINE: List[str] = [f"{str(Path.home())}/sotn-decomp/allegrex-as", "-march=allegrex", "-mabi=eabi", "-EL", "-G0", "-I", "../sotn-decomp/include/"]
 
 RE_FUNC_NAME = r"[a-zA-Z0-9_$]+"
 
@@ -122,7 +122,6 @@ def prune_asm(asm_cont: str) -> Tuple[str, str]:
         sys.exit(1)
 
     return func_name, "".join(asm_lines)
-
 
 def find_global_asm_func(root_dir: str, c_file: str, func_name: str) -> str:
     try:
@@ -310,8 +309,8 @@ def find_build_command_line(
 
         if rel_c_file not in parts:
             continue
-        if "-o" not in parts:
-            continue
+        # if "-o" not in parts:
+        #     continue
         if "-fsyntax-only" in parts:
             continue
         cmdline, asmproc_assembler = fixup_build_command(parts, rel_c_file)
@@ -711,11 +710,11 @@ def write_compile_command(compiler: List[str], cwd: str, out_file: str) -> None:
 
 
 def write_asm(asm_prelude_file: Optional[str], asm_cont: str, out_file: str) -> None:
-    asm_prelude_file = asm_prelude_file or DEFAULT_ASM_PRELUDE_FILE
-    with open(asm_prelude_file, "r") as p:
-        asm_prelude = p.read()
+    # asm_prelude_file = asm_prelude_file or DEFAULT_ASM_PRELUDE_FILE
+    # with open(asm_prelude_file, "r") as p:
+    #     asm_prelude = p.read()
     with open(out_file, "w", encoding="utf-8") as f:
-        f.write(asm_prelude)
+        # f.write(asm_prelude)
         f.write(asm_cont)
 
 
@@ -877,6 +876,8 @@ def main(arg_list: List[str]) -> None:
         compiler, assembler = find_build_command_line(
             root_dir, args.c_file, make_flags, build_system
         )
+
+    compiler = ["bin/wibo", "bin/mwccpsp.exe", "-gccinc", "-Iinclude", "-D_internal_version_pspeu", "-Op", "-c", "-lang", "c", "-sdatathreshold", "0", "-char", "unsigned"]
 
     print(f"Compiler: {formatcmd(compiler)} {{input}} -o {{output}}")
     print(f"Assembler: {formatcmd(assembler)} {{input}} -o {{output}}")

@@ -144,8 +144,8 @@ MIPS_SETTINGS: ArchSettings = ArchSettings(
     re_includes_sp=re.compile(r"\b(sp|s8)\b"),
     sp_ref_insns=["addiu"],
     reloc_str="R_MIPS_",
-    executable=["mips-linux-gnu-objdump", "mips64-linux-gnu-objdump", "mips64-elf-objdump"],
-    arguments=["-drz", "-m", "mips:4300"],
+    executable=["../sotn-decomp/bin/allegrex-objdump", "mips64-linux-gnu-objdump", "mips64-elf-objdump"],
+    arguments=["-drz", "-m", "mips:allegrex"],
     branch_likely_instructions=MIPS_BRANCH_LIKELY_INSTRUCTIONS,
     branch_instructions=MIPS_BRANCH_INSTRUCTIONS,
 )

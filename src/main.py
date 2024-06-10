@@ -82,7 +82,7 @@ class Options:
     network_debug: bool = False
     network_priority: float = 1.0
     no_context_output: bool = False
-    debug_mode: bool = False
+    debug_mode: bool = True
 
 
 def restricted_float(lo: float, hi: float) -> Callable[[str], float]:
